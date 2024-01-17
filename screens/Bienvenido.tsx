@@ -9,16 +9,17 @@ import { useFonts, Nunito_400Regular } from "@expo-google-fonts/nunito";
 import React, { useContext } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
-import { authContext } from "../componentes/userContext";
+import { userContext } from "../componentes/userContext";
+import { getlogOut } from "../services/LoginService";
 
 type WelcomeScreenProps = {
   navigation: StackNavigationProp<any>;
 };
 
-const image = require("practica1/assets/image/123.gif");
+const image = require("../assets/image/123.gif");
 
 const Bienvenido: React.FC<WelcomeScreenProps> = ({ navigation }) => {
-  const { user, isLoggedIn } = React.useContext(authContext);
+  const { isLoggedIn , handleLogin } = React.useContext(userContext);
 
   let [fontsLoaded] = useFonts({
     Nunito_400Regular,
@@ -26,6 +27,14 @@ const Bienvenido: React.FC<WelcomeScreenProps> = ({ navigation }) => {
 
   if (!fontsLoaded) {
     return null;
+  }
+
+  const handleLogout = async() => {
+    const result = await getlogOut(); 
+    if(result != null){
+      handleLogin();
+      navigation.navigate("Welcome")
+    }
   }
 
   return (
@@ -39,7 +48,13 @@ const Bienvenido: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       <View>
         <Text style={styles.text3}>To AlbaiiBlog</Text>
       </View>
-      {isLoggedIn ? <Text style={styles.icono}> ͡° ͜ʖ ͡°</Text> : (
+      {isLoggedIn ?  <TouchableOpacity
+          style={styles.button2}
+          onPress={() => handleLogout()}
+        >
+          <Text style={styles.logOut}>Log out</Text>
+        </TouchableOpacity>
+      : (
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Login")}
@@ -94,6 +109,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
   },
+  button2: {
+    backgroundColor: "#f5dde2",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    top: 50,
+    width: "60%",
+    alignItems: "center",
+    alignSelf: "center",
+  },
   image: {
     flex: 1,
   },
@@ -102,8 +127,11 @@ const styles = StyleSheet.create({
     fontFamily: "Nunito_400Regular",
   },
   icono: {
-    fontSize: 70,
+    fontSize: 30,
     textAlign: 'center',
     marginTop: 100,
+  } ,
+  logOut:{
+    fontSize: 30,
   }
 });

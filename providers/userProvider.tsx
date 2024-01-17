@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
-import { Usertype, authContext } from "../componentes/userContext";
+import React, {  useState } from "react";
+import { userType, userContext } from "../componentes/userContext";
+import { Register } from "../types/typeRegister";
 
 type UserProviderProps = {
   children: JSX.Element | JSX.Element[];
@@ -9,26 +10,33 @@ const UserProvider = (props: UserProviderProps) => {
   const { children } = props;
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
+  const [user,setUser] = useState<Register>({
+    name:'',
+    email:'',
+    psswd:''
+  });
 
-  const handleUser = (usuario: string) => {
-    setUser(usuario);
-  };
+  const userFunc = (userName:Register) =>{
+    setUser({
+    name:userName.name,
+    email:userName.email,
+    psswd:userName.psswd
+    })
+}
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    setIsLoggedIn(!isLoggedIn);
   };
 
-  const defaultValue: Usertype = {
+  const defaultValue: userType = {
     user,
-    handleUser,
-    handleLogin,
+    userFunc,
     isLoggedIn,
-  };
+    handleLogin
+}
 
   return (
-    <authContext.Provider value={defaultValue}>{children}</authContext.Provider>
+    <userContext.Provider value={defaultValue}>{children}</userContext.Provider>
   );
 };
 

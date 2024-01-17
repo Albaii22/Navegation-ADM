@@ -6,24 +6,26 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
-import { Nunito_400Regular } from "../assets/fonts/fonts";
-import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Formulario from "../componentes/Formulario";
-import { authContext } from "../componentes/userContext";
-import { TiTick } from "react-icons/ti";
+import { userContext } from "../componentes/userContext";
+import React from "react";
+import { Register } from "../types/typeRegister";
+import { getLoginUser } from "../services/LoginService";
 
 type LoginScreenProps = {
   navigation: StackNavigationProp<any>;
 };
 
-const image = require("practica1/assets/image/123.gif");
+const image = require("../assets/image/123.gif");
 
 const Login: React.FC<LoginScreenProps> = ({ navigation }) => {
-  const { user, isLoggedIn } = React.useContext(authContext);
+  const { user , isLoggedIn} = React.useContext(userContext);
 
-  return (
+
+  return (  
     <ImageBackground source={image} resizeMode="cover" style={styles.image}>
       {isLoggedIn ? (
         <KeyboardAvoidingView
@@ -32,7 +34,7 @@ const Login: React.FC<LoginScreenProps> = ({ navigation }) => {
         >
           <View style={styles.textBox1}>
             <Text style={styles.text1}>Estas logueado como</Text>
-            <Text style={styles.userLogged}>{user}</Text>
+            <Text style={styles.userLogged}>{user.name}</Text>
             <Image
               style={styles.imageContext}
               source={require("../assets/image/image1.gif")}

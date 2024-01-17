@@ -18,7 +18,7 @@ export const postRegisteredUser = async (registeredUser: Register) => {
     } else {
       console.error("Error en la respuesta del servidor:", response);
       return null;
-    }
+    }D
   } catch (error) {
     console.error("Error al realizar la solicitud de registro:", error);
     return null;

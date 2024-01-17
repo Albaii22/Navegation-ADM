@@ -1,37 +1,50 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { authContext } from "./userContext";
+import { userContext } from "./userContext";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { getLoginUser } from "../services/LoginService";
+import { Register } from "../types/typeRegister";
 
-type Errors = {
-  username?: string;
-  password?: string;
-};
 
 type LoginProp = {
   navigation: StackNavigationProp<any>;
 };
 
 const Formulario: React.FC<LoginProp> = ({ navigation }) => {
-  const [errors, setErrors] = useState<Errors>({});
-  const [password, setPassword] = useState("");
 
-  let { user, handleUser, handleLogin } = React.useContext(authContext);
+  let { user, userFunc, handleLogin } = React.useContext(userContext);
 
-  const validateInput = () => {
-    let newErrors: Errors = {};
+  const handleInputChange = (field: string, value: string) => {
+    userFunc({ ...user, [field]: value });
+  }
 
-    if (!user.trim()) {
-      newErrors.username = "Please enter your username";
+  const handleLoginIn = async () => {
+    const loginUser: Register = {
+      name: user.name,
+      email: user.email,
+      psswd: user.psswd
+    };
+
+    if (!loginUser.name || !loginUser.psswd) {
+      Alert.alert("ERROR: VALORES NO VÁLIDOS");
+    } else {
+      try {
+        const newUser: Register = await getLoginUser(loginUser);
+
+        if (newUser) {
+          Alert.alert(`Inicio de sesión exitoso: ${newUser.name}`);
+          userFunc(newUser);
+          handleLogin();
+          navigation.navigate("Drawer");
+        } else {
+          Alert.alert(`ERROR: Credenciales incorrectas ${loginUser.name} ${loginUser.psswd} ${loginUser.email}`);
+
+        }
+      } catch (error) {
+        console.error("Error al realizar el inicio de sesión:", error);
+        Alert.alert("ERROR: Fallo en el inicio de sesión");
+      }
     }
-
-    if (!password.trim()) {
-      newErrors.password = "Please enter your password";
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
   };
 
   return (
@@ -40,40 +53,25 @@ const Formulario: React.FC<LoginProp> = ({ navigation }) => {
         <Text style={styles.label}>Username</Text>
         <TextInput
           style={styles.input}
-          placeholder="example@gmail.com"
-          value={user}
-          onChangeText={(user) => {
-            setErrors((prevErrors) => ({ ...prevErrors, username: "" }));
-            handleUser(user);
-          }}
+          placeholder="josito23"
+          value={user.name}
+          onChangeText={user => handleInputChange("name", user)}
         ></TextInput>
-        {errors.username ? (
-          <Text style={styles.errorsText}>{errors.username}</Text>
-        ) : null}
         <Text style={styles.label}>Password</Text>
         <TextInput
           style={styles.input}
           placeholder="**********"
           secureTextEntry
-          value={password}
-          onChangeText={(pass) => {
-            setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
-            setPassword(pass);
-          }}
+          value={user.psswd}
+          onChangeText={psswd => handleInputChange("psswd", psswd)}
         ></TextInput>
-        {errors.password ? (
-          <Text style={styles.errorsText}>{errors.password}</Text>
-        ) : null}
         <Text style={styles.missingPassword}>Forgot password?</Text>
       </View>
       <View style={styles.buttonBox}>
         <View style={styles.button}>
           <Pressable
             onPress={() => {
-              if (validateInput()) {
-                handleLogin();
-                navigation.navigate("Drawer");
-              }
+              handleLoginIn();
             }}
           >
             <Text style={styles.buttonText}>Log in</Text>
@@ -81,8 +79,13 @@ const Formulario: React.FC<LoginProp> = ({ navigation }) => {
         </View>
         <View>
           <Text style={styles.registerText}>
-            Don't have an account? Sign up
+            Don't have an account?
           </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+            <Text>
+              Sign up
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

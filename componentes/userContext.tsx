@@ -1,12 +1,13 @@
 import React from "react";
+import { Register } from "../types/typeRegister";
 
-type Usertype = {
-  user: string;
-  handleUser: Function;
+type userType = {
+  user: Register;
+  userFunc: (userData: Register) => void;
   isLoggedIn: boolean;
-  handleLogin: Function;
+  handleLogin: () => void;
 };
 
-const authContext = React.createContext({} as Usertype);
+const userContext = React.createContext({} as userType);
 
-export { authContext, Usertype };
+export { userContext, userType };
