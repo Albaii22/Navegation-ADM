@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loadRecordings,saveRecordings } from '../services/RecorderService';
-import { Recording } from '../interfaces/recordingInterface';
+import { loadRecordings,saveRecordings } from '../services/RecordingService';
+import { Recording } from '../interfaces/recordingInterfaces';
 
 
 export default function App() {

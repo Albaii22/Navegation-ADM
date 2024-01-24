@@ -7,6 +7,7 @@ import {
 import Bienvenido from "../screens/Bienvenido";
 import Login from "../screens/Login";
 import BottomTabs from "./BottomTabs";
+import RecorderScreen from "../screens/RecorderScreen"
 
 const Drawer = createDrawerNavigator();
 
@@ -36,6 +37,7 @@ const CustomDrawer: React.FC = () => {
       <Drawer.Screen name="Welcome" component={Bienvenido} />
       <Drawer.Screen name="Login" component={Login} />
       <Drawer.Screen name="Portfolio" component={BottomTabs} />
+      <Drawer.Screen name="Grabadora" component={RecorderScreen}/>
     </Drawer.Navigator>
   );
 };
