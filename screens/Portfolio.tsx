@@ -12,7 +12,7 @@ const PortfolioAlby = () => {
   return (
     <ImageBackground
       style={styles.backImage}
-      source={require("practica1/assets/image/123.gif")}
+      source={require("../assets/image/123.gif")}
     >
       <View>
         <ScrollView>
