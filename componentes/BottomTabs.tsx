@@ -10,7 +10,7 @@ function BottomTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Feed"
-      activeColor="#343053"
+      activeColor="#343053"i
       barStyle={{ backgroundColor: "#edd7e2" }}
     >
       <Tab.Screen
